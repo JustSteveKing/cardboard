@@ -16,6 +16,7 @@ class CreateTokenRequest extends FormRequest
         return [
             'email' => 'required|string|email',
             'password' => 'required|string',
+            'token_name' => 'required|string|max:36',
         ];
     }
 }

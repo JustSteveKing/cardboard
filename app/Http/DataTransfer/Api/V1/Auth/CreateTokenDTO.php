@@ -9,6 +9,7 @@ class CreateTokenDTO extends BaseDTO
     public function __construct(
         public string $token,
         public string $tokenType,
+        public string $tokenName,
     ) {
     }
 }

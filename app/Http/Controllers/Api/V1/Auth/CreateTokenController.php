@@ -26,9 +26,10 @@ class CreateTokenController extends Controller
 
         $createTokenDto = new CreateTokenDTO(
             token: $token,
-            tokenType: 'Bearer'
+            tokenType: 'Bearer',
+            tokenName: $request->get('token_name'),
         );
 
-        return response()->json($createTokenDto->toArray());
+        return response()->json($createTokenDto->toArray(), 201);
     }
 }
