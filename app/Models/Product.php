@@ -16,10 +16,9 @@ class Product extends Model
     protected $fillable = [
         'name',
         'description',
-        'provider_external_id',
+        'product_provider_external_id',
         'image_path',
         'product_category_id',
-        'product_finish_id',
         'product_franchise_id',
         'product_provider_id',
         'product_release_id',

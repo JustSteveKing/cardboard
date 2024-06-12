@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\ProductCategory;
-use App\Models\ProductFinish;
 use App\Models\ProductFranchise;
 use App\Models\ProductProvider;
 use App\Models\ProductRelease;
@@ -21,10 +20,9 @@ return new class extends Migration
             $table->uuid()->nullable()->index();
             $table->string('name')->index();
             $table->text('description')->nullable();
-            $table->text('provider_external_id')->nullable();
+            $table->text('product_provider_external_id')->nullable();
             $table->text('image_path')->nullable();
             $table->foreignIdFor(ProductCategory::class);
-            $table->foreignIdFor(ProductFinish::class);
             $table->foreignIdFor(ProductFranchise::class);
             $table->foreignIdFor(ProductProvider::class);
             $table->foreignIdFor(ProductRelease::class);

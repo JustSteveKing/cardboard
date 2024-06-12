@@ -3,7 +3,6 @@
 namespace Database\Factories;
 
 use App\Models\ProductCategory;
-use App\Models\ProductFinish;
 use App\Models\ProductFranchise;
 use App\Models\ProductProvider;
 use App\Models\ProductRelease;
@@ -24,10 +23,9 @@ class ProductFactory extends Factory
         return [
             'name' => fake()->word,
             'description' => fake()->sentence,
-            'provider_external_id' => fake()->uuid,
+            'product_provider_external_id' => fake()->uuid,
             'image_path' => fake()->imageUrl,
             'product_category_id' => ProductCategory::all()->random()->id,
-            'product_finish_id' => ProductFinish::all()->random()->id,
             'product_franchise_id' => ProductFranchise::all()->random()->id,
             'product_provider_id' => ProductProvider::all()->random()->id,
             'product_release_id' => ProductRelease::all()->random()->id,

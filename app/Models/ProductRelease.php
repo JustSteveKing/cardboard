@@ -12,5 +12,6 @@ class ProductRelease extends Model
     protected $fillable = [
         'name',
         'code',
+        'product_provider_external_id',
     ];
 }

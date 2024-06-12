@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('product_releases', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('code');
+            $table->string('code')->nullable();
+            $table->longText('product_provider_external_id')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -16,9 +16,11 @@ class DatabaseSeeder extends Seeder
             ProductCategorySeeder::class,
             ProductFranchiseSeeder::class,
             ProductProviderSeeder::class,
-            ProductReleaseSeeder::class,
             ProductFinishSeeder::class,
-            ProductSeeder::class,
+
+            // See dx.md for seeding guide
+            // ProductReleaseSeeder::class,
+            // ProductSeeder::class,
         ]);
     }
 }
