@@ -5,7 +5,6 @@ namespace Database\Seeders;
 use App\Enums\ProductProviders;
 use App\Models\ProductProvider;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class ProductProviderSeeder extends Seeder
@@ -15,11 +14,13 @@ class ProductProviderSeeder extends Seeder
      */
     public function run(): void
     {
-        $provider = Arr::random(ProductProviders::cases())?->value;
+        foreach (ProductProviders::cases() as $provider) {
 
-        ProductProvider::factory()->create([
-            'name' => ucwords($provider),
-            'slug' => Str::slug($provider),
-        ]);
+            ProductProvider::factory()->create([
+                'name' => ucwords($provider->value),
+                'slug' => Str::slug($provider->value),
+            ]);
+        }
+
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProductCategories;
 use App\Models\ProductCategory;
 use Illuminate\Database\Seeder;
 
@@ -12,9 +13,11 @@ class ProductCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        ProductCategory::factory()->create([
-            'name' => 'card',
-            'slug' => 'card',
-        ]);
+        foreach (ProductCategories::cases() as $category) {
+            ProductCategory::factory()->create([
+                'name' => ucwords($category->value),
+                'slug' => $category->value,
+            ]);
+        }
     }
 }

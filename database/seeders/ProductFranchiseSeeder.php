@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProductFranchises;
 use App\Models\ProductFranchise;
 use Illuminate\Database\Seeder;
 
@@ -12,9 +13,11 @@ class ProductFranchiseSeeder extends Seeder
      */
     public function run(): void
     {
-        ProductFranchise::factory()->create([
-            'name' => 'Magic: The Gathering',
-            'slug' => 'magic-the-gathering',
-        ]);
+        foreach (ProductFranchises::cases() as $franchise) {
+            ProductFranchise::factory()->create([
+                'name' => ucwords($franchise->value),
+                'slug' => $franchise->value,
+            ]);
+        }
     }
 }
