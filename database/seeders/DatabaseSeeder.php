@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
             ProductFranchiseSeeder::class,
             ProductProviderSeeder::class,
             ProductReleaseSeeder::class,
+            ProductFinishSeeder::class,
         ]);
     }
 }
