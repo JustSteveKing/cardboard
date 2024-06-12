@@ -7,7 +7,7 @@
 - [Credits](#credits)
 
 #### <a id="description">Description</a>
-An API for accessing Magic: The Gatherig price data
+An API for accessing Magic: The Gathering price data
 
 #### <a id="installation">Installation</a>
 1. Clone the repository: `gh repo clone DeathLotusLabs/cardboard`
