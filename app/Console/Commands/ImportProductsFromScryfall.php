@@ -2,12 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Enums\ProductFinishes;
 use App\Models\Product;
 use App\Models\ProductCategory;
+use App\Models\ProductFinish;
 use App\Models\ProductFranchise;
+use App\Models\ProductPrice;
 use App\Models\ProductProvider;
 use App\Models\ProductRelease;
 use App\Services\FileService;
+use App\Services\MoneyService;
 use App\Services\ProductService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Http;
@@ -15,6 +19,12 @@ use JsonMachine\Items;
 
 class ImportProductsFromScryfall extends Command
 {
+    private ProductFinish $nonFoil;
+
+    private ProductFinish $foil;
+
+    private ProductFinish $etched;
+
     /**
      * The name and signature of the console command.
      *
@@ -34,6 +44,12 @@ class ImportProductsFromScryfall extends Command
      */
     public function handle()
     {
+
+        $this->nonFoil = ProductFinish::where('slug', ProductFinishes::NONFOIL->value)->get()->first();
+
+        $this->foil = ProductFinish::where('slug', ProductFinishes::FOIL->value)->get()->first();
+
+        $this->etched = ProductFinish::where('slug', ProductFinishes::ETCHED->value)->get()->first();
 
         $this->info('Getting all Products and Prices from Scryfall');
 
@@ -92,7 +108,7 @@ class ImportProductsFromScryfall extends Command
 
             $this->updateProductPrice($card, $product);
 
-            $this->importImage($product, $card);
+            // $this->importImage($product, $card);
 
             return;
         }
@@ -123,99 +139,33 @@ class ImportProductsFromScryfall extends Command
             return;
         }
 
-        // $this->updateProductPrice($card, $product);
+        $this->createProductPrice(price: $card->prices->usd_foil, product: $product, finish: $this->foil);
+
+        $this->createProductPrice(price: $card->prices->usd, product: $product, finish: $this->nonFoil);
+
+        $this->createProductPrice(price: $card->prices->usd_etched, product: $product, finish: $this->etched);
 
         // $this->importImage($product, $card);
 
     }
 
-    private function updateProductPrice($card, Product $product): void
+    private function createProductPrice($price, Product $product, ProductFinish $finish)
     {
-        //TODO: Create a product price model and add an entry for each price
-        //      Consider adding a product for each finishes price
+        $amount = MoneyService::convertToSmallestUnit($price);
+
+        if (blank($amount)) {
+            return;
+        }
+
+        ProductPrice::create([
+            'price' => $amount,
+            'product_id' => $product->id,
+            'product_finish_id' => $finish->id,
+        ]);
     }
 
     private function importImage(Product $product, $card)
     {
-
-        //Get image_uris off of card
-
-        // if ($product->image_name) {
-        //     $this->info('Has image already');
-
-        //     return;
-        // }
-
-        // $decoded = (object) json_decode($attribute->value, true);
-
-        // $imageUrl = null;
-
-        // $imageUrl = $this->getImageURL($decoded);
-
-        // $this->info("Checking {$product->name}");
-
-        // if ($imageUrl) {
-
-        //     $this->warn("Downloading image for {$product->name}");
-
-        //     $contents = Http::get($imageUrl);
-
-        //     $type = $contents->headers()['Content-Type'][0];
-
-        //     $extension = explode('/', $type)[1];
-
-        //     $hash = Str::ascii(Str::random(16)).$product->id;
-
-        //     $fileName = "{$hash}.{$extension}";
-
-        //     $product->update([
-        //         'image_path' => $fileName,
-        //     ]);
-
-        //     $status = Storage::put("{$fileName}", $contents, 'public');
-
-        //     if ($status) {
-        //         try {
-        //             $product->update([
-        //                 'image_path' => $fileName,
-        //             ]);
-
-        //         } catch (\Exception $e) {
-
-        //             echo $e->getMessage();
-
-        //             logger()->error($e->getMessage());
-
-        //             return;
-        //         }
-
-        //         return;
-        //     } else {
-        //         echo "Failed to download image for {$product->name}";
-        //     }
-
-        // }
-    }
-
-    private function getImageURL($imageUris): ?string
-    {
-        return
-            $imageUris->normal ??
-            $imageUris->png ??
-            $imageUris->large ??
-            $imageUris->art_crop ??
-            $imageUris->small ??
-            $imageUris->border_crop;
-    }
-
-    private function getDoubleSidedCardURL($card): ?string
-    {
-        return
-            $card->card_faces[0]->image_uris->normal ??
-            $card->card_faces[0]->image_uris->png ??
-            $card->card_faces[0]->image_uris->large ??
-            $card->card_faces[0]->image_uris->art_crop ??
-            $card->card_faces[0]->image_uris->small ??
-            $card->card_faces[0]->image_uris->border_crop;
+        //TODO
     }
 }

@@ -12,15 +12,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        //See DX.md for seeing guide
+
         $this->call([
             ProductCategorySeeder::class,
             ProductFranchiseSeeder::class,
             ProductProviderSeeder::class,
             ProductFinishSeeder::class,
-
-            // See dx.md for seeding guide
-            // ProductReleaseSeeder::class,
+            ProductReleaseSeeder::class,
             // ProductSeeder::class,
+            // ProductPriceSeeder::class,
         ]);
     }
 }
