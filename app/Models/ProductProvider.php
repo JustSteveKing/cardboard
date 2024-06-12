@@ -7,13 +7,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ProductFranchise extends Model
+class ProductProvider extends Model
 {
-    use HasFactory, HasTimestamps, SoftDeletes;
+    use HasFactory,HasTimestamps,SoftDeletes;
 
     protected $fillable = [
         'name',
         'slug',
-        'description',
     ];
 }
