@@ -10,6 +10,6 @@ class ProductsController extends Controller
 {
     public function __invoke()
     {
-        return ProductResource::collection(Product::paginate(50));
+        return ProductResource::collection(Product::paginate(100));
     }
 }
