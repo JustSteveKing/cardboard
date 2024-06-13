@@ -22,6 +22,8 @@ class ProductResource extends JsonResource
             'attributes' => [
                 'name' => $this->name,
                 'image_path' => $this->image_path,
+                'set_code' => $this->productRelease->code,
+                'set_name' => $this->productRelease->name,
                 'latest_prices' => [
                     'nonfoil' => $this->getLatestPrice(1),
                     'foil' => $this->getLatestPrice(2),
