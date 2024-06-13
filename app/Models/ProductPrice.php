@@ -27,4 +27,12 @@ class ProductPrice extends Model
     {
         return $this->belongsTo(ProductFinish::class);
     }
+
+    public function scopeMostRecentForFinish($query, $productId, $finishId)
+    {
+        $query->where('product_id', $productId)
+            ->where('product_finish_id', $finishId)
+            ->orderByDesc('created_at')
+            ->limit(1);
+    }
 }

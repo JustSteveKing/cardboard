@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
@@ -15,6 +17,7 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'uuid',
         'description',
         'product_provider_external_id',
         'image_path',
@@ -42,6 +45,18 @@ class Product extends Model
     public function productRelease(): BelongsTo
     {
         return $this->belongsTo(ProductRelease::class);
+    }
+
+    public function productPrices(): HasMany
+    {
+        return $this->hasMany(ProductPrice::class);
+    }
+
+    public function scopeLatestFoilPrice(Builder $query): void
+    {
+        $query->whereHas('productPrices', function ($d) {
+            dd($d);
+        });
     }
 
     protected static function booted(): void
