@@ -13,7 +13,7 @@ it('can create a token', function () {
         'email' => $user->email,
         'password' => 'password',
         'token_name' => 'test',
-    ]);
+    ], ['Accepts' => 'application/json']);
 
     $response->assertStatus(201);
 

@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -50,13 +49,6 @@ class Product extends Model
     public function productPrices(): HasMany
     {
         return $this->hasMany(ProductPrice::class);
-    }
-
-    public function scopeLatestFoilPrice(Builder $query): void
-    {
-        $query->whereHas('productPrices', function ($d) {
-            dd($d);
-        });
     }
 
     protected static function booted(): void

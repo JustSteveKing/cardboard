@@ -15,7 +15,7 @@ it('can register a user', function () {
         'email' => $email,
         'password' => 'password',
         'token_name' => 'test',
-    ]);
+    ], ['Accepts' => 'application/json']);
 
     $response->assertStatus(201);
 
