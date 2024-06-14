@@ -58,12 +58,18 @@ return [
     |--------------------------------------------------------------------------
     | Rate Limit
     |--------------------------------------------------------------------------
-    |
     | This is the rate limit applied to API Requests
-    |
     */
 
     'api_rate_limit' => env('API_RATE_LIMIT', 60),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Products Pagination Amount
+    |--------------------------------------------------------------------------
+    | This is the amount of items to return from the `/products` endpoints
+    */
+    'products_pagination_amount' => env('PRODUCTS_PAGINATION_AMOUNT', 100),
 
     /*
     |--------------------------------------------------------------------------
