@@ -6,7 +6,6 @@ uses(RefreshDatabase::class);
 
 it('can register a user', function () {
 
-
     $email = fake()->email;
 
     $response = $this->post(route('v1.register'), [

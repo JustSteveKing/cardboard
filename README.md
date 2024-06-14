@@ -99,7 +99,7 @@ Created by <a target="_blank" href="https://x.com/ChristopherLaw_">Christopher L
 
 Thanks to these wonderful people who have contributed to this project:
 
-[![Contributors](https://contrib.rocks/image?repo=deathlotuslabs/cardboard)](https://github.com/deathlotuslabs/cardboard/graphs/contributors)
+[![Contributors](https://contrib.rocks/image?repo=DeathLotusLabs/cardboard)](https://github.com/deathlotuslabs/cardboard/graphs/contributors)
 
 #### <a id="support">Support</a>
 If you would like to support development please consider sponsoring the project on <a target="_blank" href="https://www.patreon.com/DeathLotusLabs">Patreon</a>
