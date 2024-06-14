@@ -4,90 +4,81 @@ declare(strict_types=1);
 
 namespace App\Console\Commands;
 
-use App\Enums\ProductFinishes;
+use App\Jobs\Products\DownloadCardData;
 use App\Models\Product;
-use App\Models\ProductCategory;
-use App\Models\ProductFinish;
-use App\Models\ProductFranchise;
 use App\Models\ProductPrice;
-use App\Models\ProductProvider;
 use App\Models\ProductRelease;
-use App\Services\FileService;
 use App\Services\MoneyService;
-use App\Services\ProductService;
+use App\Services\Scryfall\Scryfall;
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Http;
-use JsonMachine\Items;
+use Illuminate\Contracts\Bus\Dispatcher;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Log;
+
+use function storage_path;
+
 use Symfony\Component\Console\Attribute\AsCommand;
+use Throwable;
 
 #[AsCommand(name: 'import:scryfall', description: 'Import All Cards & Prices from Scryfall.')]
 final class ImportProductsFromScryfall extends Command
 {
-    private Model|ProductFinish $nonFoil;
-
-    private Model|ProductFinish $foil;
-
-    private Model|ProductFinish $etched;
-
-    public function handle(): void
+    public function handle(Scryfall $scryfall, Dispatcher $bus): void
     {
-
-        $this->nonFoil = ProductFinish::query()->where(
-            column: 'slug',
-            operator: '=',
-            value: ProductFinishes::NONFOIL,
-        )->first();
-
-        $this->foil = ProductFinish::query()->where(
-            column: 'slug',
-            operator: '=',
-            value: ProductFinishes::FOIL,
-        )->first();
-
-        $this->etched = ProductFinish::query()->where(
-            column: 'slug',
-            operator: '=',
-            value: ProductFinishes::ETCHED,
-        )->first();
-
-        $this->info('Getting all Products and Prices from Scryfall');
+        \Laravel\Prompts\info(
+            message: 'Getting all product and prices from Scryfall',
+        );
 
         $this->info('Preparing Default Cards');
 
-        $bulks = Http::get('https://api.scryfall.com/bulk-data')->json();
+        foreach ($scryfall->bulkData() as $data) {
+            try {
+                File::makeDirectory(
+                    path: storage_path(
+                        path: 'data/magic',
+                    ),
+                );
+            } catch (Throwable $exception) {
+                Log::error($exception->getMessage(), ['exception' => $exception]);
+            }
 
-        $defaultLink = collect($bulks['data'])->filter(fn ($item) => 'default_cards' === $item['type'])?->first()['download_uri'];
+            \Laravel\Prompts\info(
+                message: "Getting data for: {$data->type}",
+            );
 
-        $uniqueLink = collect($bulks['data'])->filter(fn ($item) => 'unique_artwork' === $item['type'])?->first()['download_uri'];
-
-        FileService::generateFolderAndFile(folder: storage_path() . '/data/magic/', file: 'default-cards.json');
-
-        ProductService::downloadScryfallCardData(uri: $defaultLink, filePath: storage_path() . '/data/magic/default-cards.json');
-
-        $this->info('Preparing Unique Cards');
-
-        FileService::generateFolderAndFile(folder: storage_path() . '/data/magic/', file: 'unique-cards.json');
-
-        ProductService::downloadScryfallCardData(uri: $uniqueLink, filePath: storage_path() . '/data/magic/unique-cards.json');
-
-        $franchise = ProductFranchise::where('slug', 'magic')->first();
-
-        $category = ProductCategory::where('slug', 'card')->first();
-
-        $provider = ProductProvider::where('name', 'scryfall')->first();
-
-        $default = Items::fromFile(storage_path() . '/data/magic/default-cards.json');
-
-        $unique = Items::fromFile(storage_path() . '/data/magic/unique-cards.json');
-
-        foreach ($default as $id => $card) {
-            $this->createProduct($card, $franchise, $category, $provider);
+            $bus->dispatch(
+                command: new DownloadCardData(
+                    data: $data,
+                    path: storage_path(
+                        path: "data/magic/{$data->type}.json",
+                    ),
+                ),
+            );
         }
-
-        foreach ($unique as $id => $card) {
-            $this->createProduct($card, $franchise, $category, $provider);
-        }
+        //
+        //        $this->info('Preparing Unique Cards');
+        //
+        //        FileService::generateFolderAndFile(folder: storage_path() . '/data/magic/', file: 'unique-cards.json');
+        //
+        //        ProductService::downloadScryfallCardData(uri: $uniqueLink, filePath: storage_path() . '/data/magic/unique-cards.json');
+        //
+        //        $franchise = ProductFranchise::where('slug', 'magic')->first();
+        //
+        //        $category = ProductCategory::where('slug', 'card')->first();
+        //
+        //        $provider = ProductProvider::where('name', 'scryfall')->first();
+        //
+        //        $default = Items::fromFile(storage_path() . '/data/magic/default-cards.json');
+        //
+        //        $unique = Items::fromFile(storage_path() . '/data/magic/unique-cards.json');
+        //
+        //        foreach ($default as $id => $card) {
+        //            $this->createProduct($card, $franchise, $category, $provider);
+        //        }
+        //
+        //        foreach ($unique as $id => $card) {
+        //            $this->createProduct($card, $franchise, $category, $provider);
+        //        }
     }
 
     public function createProduct($card, ProductFranchise $franchise, ProductCategory $category, ProductProvider $provider): void

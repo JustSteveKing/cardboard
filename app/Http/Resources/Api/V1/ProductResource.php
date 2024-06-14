@@ -31,7 +31,10 @@ final class ProductResource extends JsonResource
                     'etched' => $this->getLatestPrice(3),
                 ],
             ],
-            // 'links' =>
+            'links' => [
+                'self' => route('v1:products:show', $this->resource->uuid),
+                'parent' => route('v1:products:index'),
+            ],
         ];
     }
 
