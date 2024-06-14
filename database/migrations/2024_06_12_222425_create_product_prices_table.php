@@ -22,6 +22,7 @@ return new class extends Migration
             $table->softDeletes();
 
             $table->index('product_id');
+            $table->index('product_finish_id');
         });
     }
 
