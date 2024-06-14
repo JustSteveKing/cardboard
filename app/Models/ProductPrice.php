@@ -23,9 +23,13 @@ final class ProductPrice extends Model
         'price',
     ];
 
+    /** @return BelongsTo<Product> */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(
+            related: Product::class,
+            foreignKey: 'product_id',
+        );
     }
 
     public function scopeMostRecentForFinish($query, $productId, $finish): void

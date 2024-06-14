@@ -14,7 +14,7 @@ final class IndexController
     public function __invoke(ProductsRequest $request)
     {
         $collection = Product::with(
-            relations: ['productPrices', 'productRelease'],
+            relations: ['prices', 'release'],
         )->when(
             value: $request->get('uuids'),
             callback: fn (Builder $query) => $query->whereIn(

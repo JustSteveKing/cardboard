@@ -32,19 +32,27 @@ final class Product extends Model
         'product_release_id',
     ];
 
-    public function productRelease(): BelongsTo
+    /** @return BelongsTo<ProductRelease> */
+    public function release(): BelongsTo
     {
-        return $this->belongsTo(ProductRelease::class);
+        return $this->belongsTo(
+            related: ProductRelease::class,
+            foreignKey: 'product_release_id',
+        );
     }
 
-    public function productPrices(): HasMany
+    /** @return HasMany<ProductPrice> */
+    public function prices(): HasMany
     {
-        return $this->hasMany(ProductPrice::class);
+        return $this->hasMany(
+            related: ProductPrice::class,
+            foreignKey: 'product_id',
+        );
     }
 
     protected static function booted(): void
     {
-        static::created(function (Product $product): void {
+        self::created(static function (Product $product): void {
             $product->update([
                 'uuid' => Str::uuid(),
             ]);

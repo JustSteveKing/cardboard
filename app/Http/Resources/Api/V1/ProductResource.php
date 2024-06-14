@@ -23,8 +23,8 @@ final class ProductResource extends JsonResource
             'attributes' => [
                 'name' => $this->resource->name,
                 'image_path' => $this->resource->image_path,
-                'set_code' => $this->resource->productRelease->code,
-                'set_name' => $this->resource->productRelease->name,
+                'set_code' => $this->resource->release->code,
+                'set_name' => $this->resource->release->name,
                 'latest_prices' => [
                     'nonfoil' => $this->getLatestPrice(1),
                     'foil' => $this->getLatestPrice(2),
