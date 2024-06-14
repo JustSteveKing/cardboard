@@ -39,7 +39,7 @@
                     </ul>
                 </li>
                 <li>
-                     <x-documentation.reference-link href="#data">Data</x-documentation.reference-link>
+                     <x-documentation.reference-link href="#data">Data Points</x-documentation.reference-link>
                      <ul class="ml-4">
                          <li>
                              <x-documentation.subreference-link href="#products">Products</x-documentation.subreference-link>
@@ -58,118 +58,19 @@
             <div class="flex flex-col space-y-8">
                 <section class="space-y-4" id="authentication">
                     <h2 class="text-2xl font-semibold">Misc.</h2>
-
-                    <div class="flex flex-col space-y-2">
-                        <h3 class="text-lg font-semibold">Pricing Updates</h3>
-                        <p>
-                            As this API is public, open source, and free - we are able to offer daily pricing updates.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col space-y-2">
-                        <h3 class="text-lg font-semibold">Rate Limiting</h3>
-                        <p>
-                            The API allows for 60 requests per minute from a given user/IP address.
-                            The <code>/api/v1/products</code> endpoint returns 100 items per request.
-                            This means you could update ~150,000 product prices in ~30 minutes.
-                        </p>
-                    </div>
+                    <x-documentation.sections.misc/>
                 </section>
                 <section class="space-y-4" id="authentication">
                     <h2 class="text-2xl font-semibold">Authentication</h2>
-
-                    <!--  -->
-
-                    <div class="flex flex-col space-y-2 gap-4" id="register">
-                        <div class="flex gap-4">
-                            <x-documentation.section-header>Register</x-documentation.section-header>
-                            <x-pill theme="success">POST</x-pill>
-                        </div>
-                        <x-documentation.section-description>Create and account and recieve a Bearer token</x-documentation.section-description>
-                        <x-documentation.section-subheader>Required Fields</x-documentation.section-subheader>
-
-                        <!-- Email -->
-                        <div class="flex flex-col gap-2 justify-center">
-                            <div class="flex gap-2 items-center">
-                                <x-pill>Name</x-pill>
-                                <x-documentation.parameter-type>string</x-documentation.parameter-type>
-                            </div>
-                            <x-documentation.parameter-description>The name we should address you by</x-documentation.parameter-description>
-                            <hr />
-                        </div>
-
-                        <!-- Email -->
-                        <div class="flex flex-col gap-2 justify-center">
-                            <div class="flex gap-2 items-center">
-                                <x-pill>email</x-pill>
-                                <x-documentation.parameter-type>string</x-documentation.parameter-type>
-                            </div>
-                            <x-documentation.parameter-description>The email address you would like associated with your account</x-documentation.parameter-description>
-                            <hr />
-                        </div>
-
-                        <!-- Password -->
-                        <div class="flex flex-col gap-2 justify-center">
-                            <div class="flex gap-2 items-center">
-                                <x-pill>password</x-pill>
-                                <x-documentation.parameter-type>string</x-documentation.parameter-type>
-                            </div>
-                            <x-documentation.parameter-description>The password for your account</x-documentation.parameter-description>
-                            <hr />
-                        </div>
-
-                        <!-- Token Name-->
-                        <div class="flex flex-col gap-2 justify-center">
-                            <div class="flex gap-2 items-center">
-                                <x-pill>token_name</x-pill>
-                                <x-documentation.parameter-type>string</x-documentation.parameter-type>
-                            </div>
-                            <x-documentation.parameter-description>The name for the token that will be created and returned to you</x-documentation.parameter-description>
-                            <hr />
-                        </div>
-                    </div>
-
-                    <!--  -->
-<!--
-                    <div class="flex flex-col space-y-2" id="login">
-                        <h3 class="text-lg font-semibold">Login</h3>
-                        <p>
-                            Send a POST request to <code class="bg-gray-100 px-2 rounded">/api/login</code> with:
-                        </p>
-                        <ul class="bg-gray-100 p-4 rounded">
-                            <li>email (string)</li>
-                            <li>password (string)</li>
-                        </ul>
-                        <p>
-                            This will return a Bearer token that you should include as a header on each request to the API.
-                            <code class="bg-gray-100 px-2 rounded">Authorization: Bearer token-here</code>
-                        </p>
-                    </div> -->
-
+                    <x-documentation.sections.register />
+                    <x-documentation.sections.login/>
+                </section>
+                <section class="space-y-4" id="data">
+                    <h2 class="text-2xl font-semibold">Data Points</h2>
+                    <x-documentation.sections.products/>
+                    <x-documentation.sections.product/>
                 </section>
 
-                <!-- <section class="space-y-4" id="data">
-                    <h2 class="text-2xl font-semibold">Products</h2>
-                    <div class="flex flex-col space-y-2" id="products">
-                        <h3 class="text-lg font-semibold">Products</h3>
-                        <p>
-                            Send a POST request to <code class="bg-gray-100 px-2 rounded">/api/v1/products</code>.
-                            This will return a collection of Products. Use their UUIDs to get individual pricing as noted below.
-                            This endpoint is paginated with 100 items and rate limited.
-                        </p>
-                    </div>
-
-                    <div class="flex flex-col space-y-2" id="product">
-                        <h3 class="text-lg font-semibold">Product</h3>
-                        <p>
-                            Send a POST request to <code class="bg-gray-100 px-2 rounded">/api/v1/product</code> with the UUID of the product.
-                            This will return a Product for the given UUID.
-                        </p>
-                        <ul class="bg-gray-100 p-4 rounded">
-                            <li>uuid (string)</li>
-                        </ul>
-                    </div>
-                </section> -->
             </div>
         </main>
     </body>
