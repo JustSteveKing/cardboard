@@ -12,7 +12,6 @@ it('can create a token', function () {
     $response = $this->post(route('v1.token.create'), [
         'email' => $user->email,
         'password' => 'password',
-        'token_name' => 'test',
     ], ['Accepts' => 'application/json']);
 
     $response->assertStatus(201);
