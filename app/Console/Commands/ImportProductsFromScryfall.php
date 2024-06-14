@@ -106,8 +106,11 @@ class ImportProductsFromScryfall extends Command
 
             $this->info("Product {$card->name} already exists");
 
-            $this->updateProductPrice($card, $product);
+            $this->createProductPrice(price: $card->prices->usd_foil, product: $product, finish: $this->foil);
 
+            $this->createProductPrice(price: $card->prices->usd, product: $product, finish: $this->nonFoil);
+
+            $this->createProductPrice(price: $card->prices->usd_etched, product: $product, finish: $this->etched);
             // $this->importImage($product, $card);
 
             return;
