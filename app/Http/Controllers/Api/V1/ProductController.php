@@ -12,6 +12,10 @@ class ProductController
     {
         $productUuid = $request->get('uuid');
 
+        $product = Product::where('uuid', $productUuid)->get()->first();
+
+        abort_if(auth()->user()->cannot('view', $product), 403);
+
         return ProductResource::collection(Product::where('uuid', $productUuid)->get());
     }
 }
