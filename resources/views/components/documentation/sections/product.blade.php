@@ -2,7 +2,7 @@
     <div class="flex gap-4">
         <x-documentation.section-header>Product</x-documentation.section-header>
         <div class="flex gap-4 items-center">
-            <x-pill theme="success">POST</x-pill>
+            <x-pill theme="success">GET</x-pill>
             <x-documentation.endpoint>/api/v1/product</x-documentation.endpoint>
         </div>
     </div>
@@ -19,4 +19,9 @@
         <x-documentation.parameter-description>The uuid of the product you are requesting</x-documentation.parameter-description>
         <hr />
     </div>
+
+    <!-- Example -->
+    <x-documentation.code-sample>
+        Http::get('{{config('app.url')}}/api/v1/product?uuid=abc123')->json()
+    </x-documentation.code-sample>
 </div>
