@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Console\Commands;
 
 use App\Enums\ProductFinishes;
@@ -14,62 +16,60 @@ use App\Services\FileService;
 use App\Services\MoneyService;
 use App\Services\ProductService;
 use Illuminate\Console\Command;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Http;
 use JsonMachine\Items;
+use Symfony\Component\Console\Attribute\AsCommand;
 
-class ImportProductsFromScryfall extends Command
+#[AsCommand(name: 'import:scryfall', description: 'Import All Cards & Prices from Scryfall.')]
+final class ImportProductsFromScryfall extends Command
 {
-    private ProductFinish $nonFoil;
+    private Model|ProductFinish $nonFoil;
 
-    private ProductFinish $foil;
+    private Model|ProductFinish $foil;
 
-    private ProductFinish $etched;
+    private Model|ProductFinish $etched;
 
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
-    protected $signature = 'import:scryfall';
-
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Import All Cards & Prices from Scryfall';
-
-    /**
-     * Execute the console command.
-     */
-    public function handle()
+    public function handle(): void
     {
 
-        $this->nonFoil = ProductFinish::where('slug', ProductFinishes::NONFOIL->value)->get()->first();
+        $this->nonFoil = ProductFinish::query()->where(
+            column: 'slug',
+            operator: '=',
+            value: ProductFinishes::NONFOIL,
+        )->first();
 
-        $this->foil = ProductFinish::where('slug', ProductFinishes::FOIL->value)->get()->first();
+        $this->foil = ProductFinish::query()->where(
+            column: 'slug',
+            operator: '=',
+            value: ProductFinishes::FOIL,
+        )->first();
 
-        $this->etched = ProductFinish::where('slug', ProductFinishes::ETCHED->value)->get()->first();
+        $this->etched = ProductFinish::query()->where(
+            column: 'slug',
+            operator: '=',
+            value: ProductFinishes::ETCHED,
+        )->first();
 
         $this->info('Getting all Products and Prices from Scryfall');
 
         $this->info('Preparing Default Cards');
 
-        $bulks = (Http::get('https://api.scryfall.com/bulk-data')->json());
+        $bulks = Http::get('https://api.scryfall.com/bulk-data')->json();
 
-        $defaultLink = collect($bulks['data'])->filter(fn ($item) => $item['type'] == 'default_cards')?->first()['download_uri'];
+        $defaultLink = collect($bulks['data'])->filter(fn ($item) => 'default_cards' === $item['type'])?->first()['download_uri'];
 
-        $uniqueLink = collect($bulks['data'])->filter(fn ($item) => $item['type'] == 'unique_artwork')?->first()['download_uri'];
+        $uniqueLink = collect($bulks['data'])->filter(fn ($item) => 'unique_artwork' === $item['type'])?->first()['download_uri'];
 
-        FileService::generateFolderAndFile(folder: storage_path().'/data/magic/', file: 'default-cards.json');
+        FileService::generateFolderAndFile(folder: storage_path() . '/data/magic/', file: 'default-cards.json');
 
-        ProductService::downloadScryfallCardData(uri: $defaultLink, filePath: storage_path().'/data/magic/default-cards.json');
+        ProductService::downloadScryfallCardData(uri: $defaultLink, filePath: storage_path() . '/data/magic/default-cards.json');
 
         $this->info('Preparing Unique Cards');
 
-        FileService::generateFolderAndFile(folder: storage_path().'/data/magic/', file: 'unique-cards.json');
+        FileService::generateFolderAndFile(folder: storage_path() . '/data/magic/', file: 'unique-cards.json');
 
-        ProductService::downloadScryfallCardData(uri: $uniqueLink, filePath: storage_path().'/data/magic/unique-cards.json');
+        ProductService::downloadScryfallCardData(uri: $uniqueLink, filePath: storage_path() . '/data/magic/unique-cards.json');
 
         $franchise = ProductFranchise::where('slug', 'magic')->first();
 
@@ -77,9 +77,9 @@ class ImportProductsFromScryfall extends Command
 
         $provider = ProductProvider::where('name', 'scryfall')->first();
 
-        $default = Items::fromFile(storage_path().'/data/magic/default-cards.json');
+        $default = Items::fromFile(storage_path() . '/data/magic/default-cards.json');
 
-        $unique = Items::fromFile(storage_path().'/data/magic/unique-cards.json');
+        $unique = Items::fromFile(storage_path() . '/data/magic/unique-cards.json');
 
         foreach ($default as $id => $card) {
             $this->createProduct($card, $franchise, $category, $provider);
@@ -92,7 +92,7 @@ class ImportProductsFromScryfall extends Command
 
     public function createProduct($card, ProductFranchise $franchise, ProductCategory $category, ProductProvider $provider): void
     {
-        if ($card->lang !== 'en') {
+        if ('en' !== $card->lang) {
             return;
         }
 
@@ -118,7 +118,7 @@ class ImportProductsFromScryfall extends Command
 
         $release = ProductRelease::where('name', $card->set_name)->where('code', $card->set)->first();
 
-        if (! $release) {
+        if ( ! $release) {
             $release = ProductRelease::create([
                 'name' => $card->set_name,
                 'code' => $card->set,
@@ -136,7 +136,7 @@ class ImportProductsFromScryfall extends Command
             'description' => $card->oracle_text ?? null,
         ]);
 
-        if (! $product) {
+        if ( ! $product) {
             $this->error('Could not create product');
 
             return;
@@ -152,7 +152,7 @@ class ImportProductsFromScryfall extends Command
 
     }
 
-    private function createProductPrice($price, Product $product, ProductFinish $finish)
+    private function createProductPrice($price, Product $product, ProductFinish $finish): void
     {
         $amount = MoneyService::convertToSmallestUnit($price);
 
@@ -167,7 +167,7 @@ class ImportProductsFromScryfall extends Command
         ]);
     }
 
-    private function importImage(Product $product, $card)
+    private function importImage(Product $product, $card): void
     {
         //TODO
     }
