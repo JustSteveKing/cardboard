@@ -3,23 +3,23 @@
 namespace App\Http\Controllers\Api\V1\Auth;
 
 use App\Exceptions\Auth\AuthenticationFailure;
-use App\Http\Requests\Api\V1\Auth\RegisterRequest;
+use App\Http\Requests\Api\V1\Auth\LoginRequest;
 use App\Http\Responses\API\V1\TokenResponse;
 use App\Services\IdentityService;
 use Symfony\Component\HttpFoundation\Response;
 
-final readonly class RegisterController
+final readonly class LoginController
 {
     public function __construct(
         private IdentityService $identityService
     ) {
     }
 
-    public function __invoke(RegisterRequest $request)
+    public function __invoke(LoginRequest $request)
     {
-        if (! $this->identityService->register($request->payload())) {
+        if (! $this->identityService->login($request->payload())) {
             throw new AuthenticationFailure(
-                message: 'Unable to create account',
+                message: 'Invalid Credentials',
                 code: Response::HTTP_BAD_REQUEST
             );
         }
