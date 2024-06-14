@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\Api\V1\Auth\ProductRequest;
+use App\Http\Requests\Api\V1\ProductRequest;
 use App\Http\Resources\Api\V1\ProductResource;
 use App\Models\Product;
 
