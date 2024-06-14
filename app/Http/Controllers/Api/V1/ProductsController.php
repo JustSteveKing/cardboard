@@ -11,6 +11,6 @@ class ProductsController
     {
         abort_if(auth()->user()->cannot('viewAny', Product::class), 403);
 
-        return ProductResource::collection(Product::paginate(100));
+        return ProductResource::collection(Product::with('productPrices')->paginate(config('app.products_pagination_amount')));
     }
 }
