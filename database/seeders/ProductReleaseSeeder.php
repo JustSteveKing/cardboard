@@ -1,17 +1,16 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
 use App\Models\ProductRelease;
 use Illuminate\Database\Seeder;
 
-class ProductReleaseSeeder extends Seeder
+final class ProductReleaseSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        ProductRelease::factory(10)->create();
+        ProductRelease::factory()->count(10)->create();
     }
 }

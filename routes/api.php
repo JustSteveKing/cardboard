@@ -14,6 +14,7 @@ Route::middleware(['auth:sanctum', LogAPIRequests::class])->group(function (): v
 
     Route::get('/user', static fn () => request()->user());
 
-    Route::prefix('v1')->group(base_path('routes/api/v1.php'));
-
+    Route::prefix('v1')->as('v1.')->group(base_path(
+        path: 'routes/api/v1.php',
+    ));
 });

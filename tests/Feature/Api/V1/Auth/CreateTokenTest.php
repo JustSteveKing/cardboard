@@ -3,8 +3,6 @@
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-uses(RefreshDatabase::class);
-
 it('can create a token', function () {
 
     $user = User::factory()->create();

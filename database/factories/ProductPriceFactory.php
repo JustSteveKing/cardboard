@@ -1,27 +1,30 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
+use App\Enums\ProductFinishes;
 use App\Models\Product;
 use App\Models\ProductFinish;
+use App\Models\ProductPrice;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductPrice>
- */
-class ProductPriceFactory extends Factory
+final class ProductPriceFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    /** @var class-string<Model> */
+    protected $model = ProductPrice::class;
+
+    /** @return array<string,mixed> */
     public function definition(): array
     {
         return [
-            'price' => rand(0, 100000),
-            'product_id' => Product::all()->random()->id,
-            'product_finish_id' => ProductFinish::all()->random()->id,
+            'price' => $this->faker->numberBetween(
+                int2: 10_000,
+            ),
+            'product_id' => Product::factory(),
+            'finish' => ProductFinishes::NONFOIL,
         ];
     }
 }

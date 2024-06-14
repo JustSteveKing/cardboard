@@ -1,26 +1,26 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
+use App\Models\ProductRelease;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\ProductRelease>
- */
-class ProductReleaseFactory extends Factory
+final class ProductReleaseFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    /** @var class-string<Model> */
+    protected $model = ProductRelease::class;
+
+    /** @return array<string,mixed> */
     public function definition(): array
     {
         return [
-            'name' => fake()->word,
-            'code' => fake()->word,
-            'product_provider_external_id' => Str::uuid(),
+            'name' => $this->faker->word,
+            'code' => $this->faker->word,
+            'external_id' => $this->faker->uuid(),
         ];
     }
 }

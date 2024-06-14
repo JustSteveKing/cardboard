@@ -1,34 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use App\Models\ProductCategory;
-use App\Models\ProductFranchise;
-use App\Models\ProductProvider;
+use App\Enums\ProductCategories;
+use App\Enums\ProductFranchises;
+use App\Models\Product;
 use App\Models\ProductRelease;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Model;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Product>
- */
-class ProductFactory extends Factory
+final class ProductFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    /** @var class-string<Model> */
+    protected $model = Product::class;
+
+    /** @return array<string,mixed> */
     public function definition(): array
     {
         return [
-            'name' => fake()->word,
-            'description' => fake()->sentence,
-            'product_provider_external_id' => fake()->uuid,
-            'image_path' => fake()->imageUrl,
-            'product_category_id' => ProductCategory::all()->random()->id,
-            'product_franchise_id' => ProductFranchise::all()->random()->id,
-            'product_provider_id' => ProductProvider::all()->random()->id,
-            'product_release_id' => ProductRelease::all()->random()->id,
+            'name' => $this->faker->word(),
+            'description' => $this->faker->sentence(),
+            'external_id' => $this->faker->uuid(),
+            'image_path' => $this->faker->imageUrl(),
+            'category' => ProductCategories::CARD,
+            'franchise' => ProductFranchises::MAGIC,
+            'product_release_id' => ProductRelease::factory(),
         ];
     }
 }

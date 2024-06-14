@@ -1,34 +1,29 @@
 <?php
 
+declare(strict_types=1);
+
+use App\Enums\ProductFinishes;
 use App\Models\Product;
-use App\Models\ProductFinish;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
-    /**
-     * Run the migrations.
-     */
+return new class () extends Migration {
     public function up(): void
     {
-        Schema::create('product_prices', function (Blueprint $table) {
+        Schema::create('product_prices', static function (Blueprint $table): void {
             $table->id();
-            $table->foreignIdFor(Product::class);
-            $table->foreignIdFor(ProductFinish::class);
+
+            $table->string('finish')->default(ProductFinishes::NONFOIL->value);
+
+            $table->foreignIdFor(Product::class)->index()->constrained();
             $table->unsignedBigInteger('price');
+
             $table->timestamps();
             $table->softDeletes();
-
-            $table->index('product_id');
-            $table->index('product_finish_id');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('product_prices');

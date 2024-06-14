@@ -1,7 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Models;
 
+use App\Enums\ProductFranchises;
+use App\Enums\ProductProviders;
 use Illuminate\Database\Eloquent\Concerns\HasTimestamps;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,36 +14,23 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Str;
 
-class Product extends Model
+final class Product extends Model
 {
-    use HasFactory,HasTimestamps,SoftDeletes;
+    use HasFactory;
+    use HasTimestamps;
+    use SoftDeletes;
 
     protected $fillable = [
         'name',
         'uuid',
         'description',
-        'product_provider_external_id',
+        'external_id',
         'image_path',
-        'product_category_id',
-        'product_franchise_id',
-        'product_provider_id',
+        'category',
+        'franchise',
+        'provider',
         'product_release_id',
     ];
-
-    public function productCategory(): BelongsTo
-    {
-        return $this->belongsTo(ProductCategory::class);
-    }
-
-    public function productFranchise(): BelongsTo
-    {
-        return $this->belongsTo(ProductFranchise::class);
-    }
-
-    public function productProvider(): BelongsTo
-    {
-        return $this->belongsTo(ProductProvider::class);
-    }
 
     public function productRelease(): BelongsTo
     {
@@ -53,10 +44,19 @@ class Product extends Model
 
     protected static function booted(): void
     {
-        static::created(function (Product $product) {
+        static::created(function (Product $product): void {
             $product->update([
                 'uuid' => Str::uuid(),
             ]);
         });
+    }
+
+    /** @return array<string,class-string> */
+    protected function casts(): array
+    {
+        return [
+            'provider' => ProductProviders::class,
+            'franchise' => ProductFranchises::class,
+        ];
     }
 }
