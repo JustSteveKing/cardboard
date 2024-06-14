@@ -21,8 +21,17 @@
         <hr />
     </div>
 
+    <div class="flex flex-col gap-2 justify-center">
+        <div class="flex gap-2 items-center">
+            <x-pill>uuids</x-pill>
+            <x-documentation.parameter-type>string</x-documentation.parameter-type>
+        </div>
+        <x-documentation.parameter-description>The specific uuids to fetch</x-documentation.parameter-description>
+        <hr />
+    </div>
+
     <!-- Example -->
     <x-documentation.code-sample>
-        Http::get('{{config('app.url')}}/api/v1/products')->json()
+        Http::get('{{config('app.url')}}/api/v1/products?uuids=abc123,def456')->json()
     </x-documentation.code-sample>
 </div>
